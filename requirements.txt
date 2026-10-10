@@ -1,0 +1,10 @@
+google-genai
+langchain-community
+langchain-core
+langchain-google-genai
+langgraph
+pandas
+pydantic
+python-dotenv
+streamlit
+tavily-python

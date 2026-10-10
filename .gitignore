@@ -1,0 +1,36 @@
+# Python environments and bytecode
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Local credentials and Streamlit secrets
+.env
+.env.*
+!.env.example
+.streamlit/secrets.toml
+.streamlit/credentials.toml
+
+# Notebook and test/tool caches
+.ipynb_checkpoints/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Generated application assets. Remove this rule to version generated images.
+/images/
+
+# Build and log output
+build/
+dist/
+*.log
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+Desktop.ini
+.idea/
