@@ -13,7 +13,7 @@
   <div class="app-shell">
     <aside class="sidebar">
       <a class="brand" href="/" aria-label="InkForge home"><span class="brand-icon">I</span><span>inkforge</span></a>
-      <div class="workspace-switch"><span class="workspace-dot"></span><span><b>Personal workspace</b><small>Private to this browser</small></span><span class="chevron">⌄</span></div>
+      <div class="workspace-switch"><span class="workspace-dot"></span><span><b>Personal workspace</b><small>Library stored in this browser</small></span><span class="chevron">⌄</span></div>
       <button id="new-draft" class="new-draft" type="button"><span>＋</span> New draft</button>
       <div class="side-label">YOUR LIBRARY <span id="library-count">0</span></div>
       <div class="library-heading"><span>Documents</span><span class="local-badge">LOCAL</span></div>
@@ -21,7 +21,7 @@
       <input id="document-input" type="file" accept=".docx,.txt,.md,.markdown,.csv" multiple hidden>
       <button id="add-document" class="add-document" type="button"><span class="plus-icon">＋</span><span>Add documents</span></button>
       <div class="sidebar-spacer"></div>
-      <div class="storage-note"><span class="lock-icon">◈</span><span><b>Stored in this browser</b><small>Documents and vectors stay in IndexedDB. Clear them whenever you like.</small></span></div>
+      <div class="storage-note"><span class="lock-icon">◈</span><span><b>Stored in this browser</b><small>Text is sent to Google AI for embeddings; relevant passages are used for drafts.</small></span></div>
       <button id="manage-api-key" class="key-setting" type="button"><span class="key-symbol">⌘</span><span>Google AI key</span><span id="key-indicator" class="key-indicator"></span></button>
       <div id="api-key-panel" class="api-key-panel hidden" aria-labelledby="api-key-heading">
         <p class="key-eyebrow">SESSION KEY</p><h2 id="api-key-heading">Connect Google AI</h2>
