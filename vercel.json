@@ -4,7 +4,7 @@
   ],
   "functions": {
     "index.py": {
-      "includeFiles": ["frontend/**"],
+      "includeFiles": "frontend/**",
       "maxDuration": 300
     }
   }
