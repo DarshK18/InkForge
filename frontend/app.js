@@ -7,11 +7,18 @@ const apiKeyPanel = document.querySelector("#api-key-panel");
 const apiKeyInput = document.querySelector("#api-key-input");
 const saveApiKey = document.querySelector("#save-api-key");
 const forgetApiKey = document.querySelector("#forget-api-key");
+const manageApiKey = document.querySelector("#manage-api-key");
 let sessionApiKey = sessionStorage.getItem("inkforge_google_api_key") || "";
 let draft = {};
 
 document.querySelector("#year").textContent = new Date().getFullYear();
 forgetApiKey.classList.toggle("hidden", !sessionApiKey);
+manageApiKey.classList.toggle("hidden", !sessionApiKey);
+if (!sessionApiKey) {
+  apiKeyPanel.classList.remove("hidden");
+  status.className = "status";
+  status.textContent = "Connect a Google AI key for this browser session before generating a draft.";
+}
 document.querySelectorAll(".suggestion").forEach((button) => {
   button.addEventListener("click", () => {
     topic.value = button.textContent.trim();
@@ -39,10 +46,16 @@ saveApiKey.addEventListener("click", () => {
   sessionStorage.setItem("inkforge_google_api_key", key);
   apiKeyInput.value = "";
   forgetApiKey.classList.remove("hidden");
+  manageApiKey.classList.remove("hidden");
   apiKeyPanel.classList.add("hidden");
   status.className = "status";
-  status.textContent = "Key saved for this browser session. Continuing your draft…";
-  form.requestSubmit();
+  if (topic.value.trim().length >= 3) {
+    status.textContent = "Key saved for this browser session. Continuing your draft…";
+    form.requestSubmit();
+  } else {
+    status.textContent = "Key saved for this browser session. Now add a topic and generate your draft.";
+    topic.focus();
+  }
 });
 apiKeyInput.addEventListener("keydown", (event) => {
   if (event.key === "Enter") saveApiKey.click();
@@ -52,9 +65,15 @@ forgetApiKey.addEventListener("click", () => {
   sessionStorage.removeItem("inkforge_google_api_key");
   sessionApiKey = "";
   forgetApiKey.classList.add("hidden");
-  apiKeyPanel.classList.add("hidden");
+  manageApiKey.classList.add("hidden");
+  apiKeyPanel.classList.remove("hidden");
   status.className = "status";
-  status.textContent = "Saved key removed from this browser session.";
+  status.textContent = "Saved key removed. Add a Google AI key before generating a draft.";
+});
+
+manageApiKey.addEventListener("click", () => {
+  apiKeyPanel.classList.remove("hidden");
+  apiKeyInput.focus();
 });
 
 form.addEventListener("submit", async (event) => {
@@ -79,11 +98,11 @@ form.addEventListener("submit", async (event) => {
       status.textContent = "Add your Google AI API key to continue. It will be kept for this browser session only.";
       return;
     }
-    if (response.status === 502 && sessionApiKey) {
+    if (response.status === 401) {
       apiKeyPanel.classList.remove("hidden");
       apiKeyInput.focus();
       status.className = "status error";
-      status.textContent = "Google could not use that key. Check it or enter a different key for this session.";
+      status.textContent = data.detail || "Google rejected that key. Check it or enter a different key for this session.";
       return;
     }
     if (!response.ok) throw new Error(data.detail || "Could not generate a draft.");

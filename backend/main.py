@@ -62,9 +62,14 @@ def generate_blog(request: GenerateRequest, user_api_key: str | None = Header(de
             "evidence": [item.model_dump() for item in result.get("evidence", [])],
             "images": result.get("image_specs", []),
         }
-    except Exception:
+    except Exception as exc:
         logger.exception("InkForge generation failed")
-        raise HTTPException(status_code=502, detail="Generation failed. Check the configured model and search API keys, then try again.") from None
+        message = str(exc).lower()
+        if "api key" in message and any(marker in message for marker in ("invalid", "not valid", "required", "unauthorized")):
+            raise HTTPException(status_code=401, detail="Google rejected this API key. Check that it is valid and Gemini API access is enabled.") from None
+        if any(marker in message for marker in ("quota", "resource_exhausted", "rate limit", "429")):
+            raise HTTPException(status_code=429, detail="Google AI quota or rate limit reached. Check the key's project quota and try again later.") from None
+        raise HTTPException(status_code=502, detail="Generation failed due to an upstream error. Check the Vercel function logs for details.") from None
 
 
 @app.get("/{path:path}", include_in_schema=False)

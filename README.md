@@ -64,7 +64,7 @@ uv run uvicorn index:app --reload
 
 Open <http://127.0.0.1:8000>. The API health check is <http://127.0.0.1:8000/api/health> and the interactive API documentation is <http://127.0.0.1:8000/docs>.
 
-`GOOGLE_API_KEY` can be set locally or in Vercel for a site-wide default. If it is not set, the app asks for a visitor's own key when they generate a draft. The visitor key is held in that tab's `sessionStorage`, survives refreshes, and can be cleared with **Forget saved key**. `TAVILY_API_KEY` is optional; without it, the workflow can still plan and write but cannot retrieve current web evidence.
+On first visit, the app asks for a visitor's Google AI key before they generate a draft. The visitor key is held in that tab's `sessionStorage`, survives refreshes, and can be cleared with **Forget saved key**. A site-wide `GOOGLE_API_KEY` may also be configured as a server-side default for local/API use, but it is never sent to the frontend. `TAVILY_API_KEY` is optional; without it, the workflow can still plan and write but cannot retrieve current web evidence.
 
 ## Deploy to Vercel
 
