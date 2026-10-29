@@ -8,6 +8,7 @@ The project uses **FastAPI + LangGraph on Python**, a lightweight browser fronte
 
 ## What it does
 
+- Uses a product-style welcome hero and a focused writing room, with InkForge's own identity and blue accents.
 - Plans a useful article outline, routes timely topics to optional web research, writes sections in parallel, and assembles a Markdown draft.
 - Accepts private DOCX, TXT, Markdown, and CSV documents through the **＋ Add documents** control.
 - Chunks documents and creates 768-dimension embeddings with Google's `gemini-embedding-001` model.
