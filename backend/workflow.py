@@ -4,6 +4,7 @@ import operator
 import os
 import re
 from datetime import date, timedelta
+from functools import lru_cache
 from pathlib import Path
 from typing import TypedDict, List, Optional, Literal, Annotated
 
@@ -114,7 +115,10 @@ class State(TypedDict):
 # -----------------------------
 # 2) LLM
 # -----------------------------
-llm = ChatGoogleGenerativeAI(model="gemini-3.1-flash-lite")
+@lru_cache(maxsize=1)
+def get_llm() -> ChatGoogleGenerativeAI:
+    """Create the Gemini client only when a generation request needs it."""
+    return ChatGoogleGenerativeAI(model="gemini-3.1-flash-lite")
 
 # -----------------------------
 # 3) Router
@@ -134,7 +138,7 @@ If needs_research=true:
 """
 
 def router_node(state: State) -> dict:
-    decider = llm.with_structured_output(RouterDecision)
+    decider = get_llm().with_structured_output(RouterDecision)
     decision = decider.invoke(
         [
             SystemMessage(content=ROUTER_SYSTEM),
@@ -213,7 +217,7 @@ def research_node(state: State) -> dict:
     if not raw:
         return {"evidence": []}
 
-    extractor = llm.with_structured_output(EvidencePack)
+    extractor = get_llm().with_structured_output(EvidencePack)
     pack = extractor.invoke(
         [
             SystemMessage(content=RESEARCH_SYSTEM),
@@ -262,7 +266,7 @@ Output must match Plan schema.
 """
 
 def orchestrator_node(state: State) -> dict:
-    planner = llm.with_structured_output(Plan)
+    planner = get_llm().with_structured_output(Plan)
     mode = state.get("mode", "closed_book")
     evidence = state.get("evidence", [])
 
@@ -345,7 +349,7 @@ def worker_node(payload: dict) -> dict:
         for e in evidence[:20]
     )
 
-    section_md = llm.invoke(
+    section_md = get_llm().invoke(
         [
             SystemMessage(content=WORKER_SYSTEM),
             HumanMessage(
@@ -401,7 +405,7 @@ Return strictly GlobalImagePlan.
 """
 
 def decide_images(state: State) -> dict:
-    planner = llm.with_structured_output(GlobalImagePlan)
+    planner = get_llm().with_structured_output(GlobalImagePlan)
     merged_md = state["merged_md"]
     plan = state["plan"]
     assert plan is not None
