@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="650" viewBox="0 0 1280 650" role="img" aria-labelledby="title desc">
+  <title id="title">InkForge document-grounded writing workflow</title>
+  <desc id="desc">Documents are embedded with Google's Gemini embedding model and stored as vectors in browser IndexedDB. A writing topic is embedded and matched against those vectors, then relevant excerpts and optional web research feed the LangGraph planning, parallel writing, and draft assembly steps.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#7890b5"/></marker>
+    <style>
+      .bg{fill:#f6f8fc}.title{font:600 24px Inter,Segoe UI,sans-serif;fill:#1e2b42}.sub{font:13px Inter,Segoe UI,sans-serif;fill:#718096}.box{fill:#fff;stroke:#dce5f1;stroke-width:1.5;rx:12}.blue{fill:#eff4ff;stroke:#8ba9e5}.green{fill:#f1faf6;stroke:#9dd6bb}.label{font:600 13px Inter,Segoe UI,sans-serif;fill:#263853}.detail{font:11px Inter,Segoe UI,sans-serif;fill:#75849a}.small{font:10px ui-monospace,Consolas,monospace;fill:#77869a;letter-spacing:.5px}.line{fill:none;stroke:#8296b4;stroke-width:2;marker-end:url(#arrow)}.local{fill:#effaf5;stroke:#81caa6;stroke-width:1.5;rx:12}.tag{fill:#e6f6ee;rx:8}
+    </style>
+  </defs>
+  <rect class="bg" width="1280" height="650" rx="18"/>
+  <text class="title" x="52" y="56">From private notes to a grounded first draft</text>
+  <text class="sub" x="52" y="82">One browser-local vector library. Focused retrieval. A parallel LangGraph writing workflow.</text>
+
+  <rect class="box" x="52" y="145" width="205" height="112"/>
+      <text class="small" x="72" y="174">01 · ADD</text><text class="label" x="72" y="202">Your documents</text><text class="detail" x="72" y="225">DOCX · TXT · MD · CSV</text>
+  <path class="line" d="M257 201H310"/>
+  <rect class="blue" x="320" y="145" width="214" height="112" rx="12"/>
+  <text class="small" x="340" y="174">02 · EMBED</text><text class="label" x="340" y="202">Gemini Embedding</text><text class="detail" x="340" y="225">gemini-embedding-001</text>
+  <path class="line" d="M534 201H586"/>
+  <rect class="local" x="596" y="130" width="240" height="142"/>
+  <rect class="tag" x="751" y="146" width="66" height="21"/><text class="small" x="761" y="160">LOCAL</text>
+  <text class="small" x="617" y="174">03 · STORE</text><text class="label" x="617" y="202">IndexedDB vector store</text><text class="detail" x="617" y="225">Text + 768-dim vectors</text><text class="detail" x="617" y="243">Stays in this browser</text>
+
+  <rect class="box" x="52" y="372" width="205" height="112"/>
+  <text class="small" x="72" y="401">04 · ASK</text><text class="label" x="72" y="429">Writing topic</text><text class="detail" x="72" y="452">A prompt or question</text>
+  <path class="line" d="M257 428H310"/>
+  <rect class="blue" x="320" y="372" width="214" height="112" rx="12"/>
+  <text class="small" x="340" y="401">05 · RETRIEVE</text><text class="label" x="340" y="429">Query embedding</text><text class="detail" x="340" y="452">Cosine similarity · best 6</text>
+  <path class="line" d="M534 428H577"/>
+  <path class="line" d="M716 272V327Q716 344 699 344H617Q596 344 596 364V372"/>
+  <rect class="box" x="586" y="372" width="190" height="112"/>
+  <text class="small" x="606" y="401">06 · GROUND</text><text class="label" x="606" y="429">Private excerpts</text><text class="detail" x="606" y="452">Only relevant passages</text>
+  <path class="line" d="M776 428H822"/>
+  <rect class="box" x="832" y="343" width="184" height="171"/>
+  <text class="small" x="852" y="373">07 · LANGGRAPH</text><text class="label" x="852" y="402">Plan the article</text><text class="detail" x="852" y="426">Route · optional research</text><text class="detail" x="852" y="447">Outline · parallel sections</text><text class="detail" x="852" y="468">Assemble · add citations</text>
+  <path class="line" d="M1016 428H1060"/>
+  <rect class="green" x="1070" y="372" width="165" height="112" rx="12"/>
+  <text class="small" x="1089" y="401">08 · REVIEW</text><text class="label" x="1089" y="429">Markdown draft</text><text class="detail" x="1089" y="452">Copy or download</text>
+
+  <rect class="box" x="832" y="145" width="184" height="112"/>
+  <text class="small" x="852" y="174">OPTIONAL WEB RESEARCH</text><text class="label" x="852" y="202">Tavily evidence</text><text class="detail" x="852" y="225">Only when the topic is timely</text>
+  <path class="line" d="M924 257V320"/>
+  <text class="small" x="52" y="566">PRIVACY</text><text class="detail" x="107" y="566">Documents are processed for embeddings, then kept in your browser. Matching excerpts are sent with draft requests; no hosted vector database is used.</text>
+  <text class="small" x="52" y="594">NOTE</text><text class="detail" x="107" y="594">Google receives document text to create embeddings and the selected excerpts to generate your draft.</text>
+</svg>
