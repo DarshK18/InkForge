@@ -28,6 +28,7 @@ The frontend follows the dark, editorial visual language of [Darsh's portfolio](
 ├── index.py                # Vercel Python entry point
 ├── vercel.json             # Vercel routing and function settings
 ├── pyproject.toml          # uv project dependencies
+├── uv.lock                 # Locked dependency versions for deployment
 ├── .python-version         # Python runtime selection
 ├── .env.example            # Safe local environment template
 └── README.md
