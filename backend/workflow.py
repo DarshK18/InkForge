@@ -352,7 +352,7 @@ def worker_node(payload: dict) -> dict:
         for e in evidence[:20]
     )
 
-    section_md = get_llm(payload.get("google_api_key")).invoke(
+    response = get_llm(payload.get("google_api_key")).invoke(
         [
             SystemMessage(content=WORKER_SYSTEM),
             HumanMessage(
@@ -377,7 +377,31 @@ def worker_node(payload: dict) -> dict:
                 )
             ),
         ]
-    ).content.strip()
+    )
+    # Gemini can return multimodal/structured content blocks instead of a
+    # single string. Keep the textual parts and discard non-text blocks.
+    content = response.content
+    if isinstance(content, str):
+        section_md = content.strip()
+    elif isinstance(content, list):
+        text_parts = []
+        for part in content:
+            if isinstance(part, str):
+                text_parts.append(part)
+            elif isinstance(part, dict):
+                text_value = part.get("text")
+                if isinstance(text_value, str):
+                    text_parts.append(text_value)
+            else:
+                text_value = getattr(part, "text", None)
+                if isinstance(text_value, str):
+                    text_parts.append(text_value)
+        section_md = "\n".join(text_parts).strip()
+    else:
+        section_md = str(content or "").strip()
+
+    if not section_md:
+        raise ValueError("Gemini returned no text for a blog section.")
 
     return {"sections": [(task.id, section_md)]}
 
