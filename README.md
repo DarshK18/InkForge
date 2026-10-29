@@ -8,7 +8,7 @@ The project uses **FastAPI + LangGraph on Python**, a lightweight browser fronte
 
 ## What it does
 
-- Uses a product-style welcome hero and a focused writing room, with InkForge's own identity and blue accents.
+- Uses a playful product homepage and focused writing room, with InkForge's own identity, dark mode by default, and a warm light-mode toggle.
 - Plans a useful article outline, routes timely topics to optional web research, writes sections in parallel, and assembles a Markdown draft.
 - Accepts private DOCX, TXT, Markdown, and CSV documents through the **＋ Add documents** control.
 - Chunks documents and creates 768-dimension embeddings with Google's `gemini-embedding-001` model.
@@ -61,7 +61,7 @@ flowchart LR
 │   └── workflow.svg        # Architecture and data-flow illustration
 ├── frontend/
 │   ├── index.html          # Minimal writing workspace and private-library UI
-│   ├── styles.css          # Responsive blue-and-white workspace styling
+│   ├── styles.css          # Responsive dark theme with warm light-mode option
 │   └── app.js              # Session key, IndexedDB vectors, API calls, draft export
 ├── index.py                # Vercel Python entry point
 ├── vercel.json             # Static asset inclusion and function duration

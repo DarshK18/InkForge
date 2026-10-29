@@ -10,12 +10,27 @@ const forgetApiKey = document.querySelector("#forget-api-key");
 const documentInput = document.querySelector("#document-input");
 const documentList = document.querySelector("#document-list");
 const libraryCount = document.querySelector("#library-count");
+const themeToggle = document.querySelector("#theme-toggle");
 const IDB_NAME = "inkforge-private-library";
 const IDB_STORE = "documents";
 const MAX_LIBRARY_CHUNKS = 120;
 let sessionApiKey = sessionStorage.getItem("inkforge_google_api_key") || "";
 let draft = {};
 let db;
+
+function applyTheme(theme) {
+  const isDark = theme === "dark";
+  document.documentElement.dataset.theme = isDark ? "dark" : "light";
+  document.querySelector("#theme-icon").textContent = isDark ? "☼" : "◐";
+  document.querySelector("#theme-label").textContent = isDark ? "Light mode" : "Dark mode";
+  themeToggle.setAttribute("aria-label", `Switch to ${isDark ? "light" : "dark"} mode`);
+  localStorage.setItem("inkforge_theme", isDark ? "dark" : "light");
+}
+
+applyTheme(localStorage.getItem("inkforge_theme") || "dark");
+themeToggle.addEventListener("click", () => {
+  applyTheme(document.documentElement.dataset.theme === "dark" ? "light" : "dark");
+});
 
 function setStatus(message, kind = "info") {
   status.textContent = message;
