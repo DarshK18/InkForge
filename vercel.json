@@ -1,0 +1,11 @@
+{
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.py" }
+  ],
+  "functions": {
+    "index.py": {
+      "includeFiles": ["frontend/**"],
+      "maxDuration": 300
+    }
+  }
+}

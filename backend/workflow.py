@@ -87,6 +87,7 @@ class GlobalImagePlan(BaseModel):
 
 class State(TypedDict):
     topic: str
+    save_artifacts: bool
 
     # routing / research
     mode: str
@@ -487,11 +488,20 @@ def generate_and_place_images(state: State) -> dict:
     md = state.get("md_with_placeholders") or state["merged_md"]
     image_specs = state.get("image_specs", []) or []
 
+    # Vercel functions have ephemeral, read-only application filesystems. The
+    # web API returns Markdown directly and leaves image generation to local runs.
+    if not state.get("save_artifacts", True):
+        for spec in image_specs:
+            note = f"> **Suggested visual:** {spec.get('caption', '')} — {spec.get('alt', '')}\n"
+            md = md.replace(spec["placeholder"], note)
+        return {"final": md}
+
     # If no images requested, just write merged markdown
     if not image_specs:
         filename = f"{_safe_slug(plan.blog_title)}.md"
-        # These outputs are relative to the launch directory; start Streamlit from the project root.
-        Path(filename).write_text(md, encoding="utf-8")
+        # Local artifact output is relative to the launch directory.
+        if state.get("save_artifacts", True):
+            Path(filename).write_text(md, encoding="utf-8")
         return {"final": md}
 
     # Keep this relative path aligned with the frontend's preview and ZIP paths.

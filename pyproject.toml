@@ -1,0 +1,21 @@
+[project]
+name = "inkforge"
+version = "1.0.0"
+description = "A LangGraph powered technical writing studio with a FastAPI web API."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "fastapi>=0.115,<1",
+    "google-genai>=1.0",
+    "langchain-community>=0.3",
+    "langchain-core>=0.3",
+    "langchain-google-genai>=2.0",
+    "langgraph>=0.2",
+    "pydantic>=2.0",
+    "python-dotenv>=1.0",
+    "tavily-python>=0.5",
+    "uvicorn>=0.30",
+]
+
+[tool.uv]
+package = false
