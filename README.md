@@ -2,7 +2,7 @@
 
 InkForge turns a topic into a structured technical blog draft. A LangGraph workflow plans the article, optionally gathers recent evidence with Tavily, writes sections in parallel, and returns a Markdown draft that can be downloaded from the web interface.
 
-The frontend follows the dark, editorial visual language of [Darsh's portfolio](https://darshk18.github.io/): near-black surfaces, fine borders, a subtle dot field, compact mono labels, and soft pink highlights.
+The frontend follows the dark, editorial visual language of [Darsh's portfolio](https://darshk18.github.io/): near-black surfaces, fine borders, a subtle dot field, compact mono labels, and blue highlights.
 
 ## Features
 
@@ -13,6 +13,7 @@ The frontend follows the dark, editorial visual language of [Darsh's portfolio](
 - Sources returned alongside the article; generated image ideas are represented as notes in the Markdown draft.
 - Single-project Vercel deployment for the frontend and Python API.
 - Local development and dependency management with `uv`.
+- If no server key is configured, visitors can use their own Google AI key for the current browser session.
 
 ## Project structure
 
@@ -63,7 +64,7 @@ uv run uvicorn index:app --reload
 
 Open <http://127.0.0.1:8000>. The API health check is <http://127.0.0.1:8000/api/health> and the interactive API documentation is <http://127.0.0.1:8000/docs>.
 
-`GOOGLE_API_KEY` is required to generate a draft. `TAVILY_API_KEY` is optional; without it, the workflow can still plan and write but cannot retrieve current web evidence.
+`GOOGLE_API_KEY` can be set locally or in Vercel for a site-wide default. If it is not set, the app asks for a visitor's own key when they generate a draft. The visitor key is held in that tab's `sessionStorage`, survives refreshes, and can be cleared with **Forget saved key**. `TAVILY_API_KEY` is optional; without it, the workflow can still plan and write but cannot retrieve current web evidence.
 
 ## Deploy to Vercel
 
@@ -91,13 +92,14 @@ Request body:
 }
 ```
 
-Optional `as_of` accepts an ISO date (`YYYY-MM-DD`). The response contains the article title, Markdown, writing mode, and research evidence.
+Optional `as_of` accepts an ISO date (`YYYY-MM-DD`). The response contains the article title, Markdown, writing mode, and research evidence. If a visitor supplies a personal key, send it in the `X-Google-API-Key` request header; the API does not persist it.
 
 ## Security and configuration
 
 - Keep production API keys in Vercel environment settings and local keys in `.env`.
 - `.env.example` contains variable names and placeholders only.
-- The frontend never receives provider keys; it calls the same-origin `/api/generate` endpoint.
+- The site-wide Vercel key is never sent to the frontend. Visitor-supplied keys are sent only with generation requests and are not saved by the backend.
+- The browser keeps a visitor's key in session storage until that tab session ends or the visitor clears it.
 - The API validates topic length and returns generic errors rather than provider exception details.
 
 ## License

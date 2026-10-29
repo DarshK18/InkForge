@@ -4,7 +4,6 @@ import operator
 import os
 import re
 from datetime import date, timedelta
-from functools import lru_cache
 from pathlib import Path
 from typing import TypedDict, List, Optional, Literal, Annotated
 
@@ -89,6 +88,7 @@ class GlobalImagePlan(BaseModel):
 class State(TypedDict):
     topic: str
     save_artifacts: bool
+    google_api_key: Optional[str]
 
     # routing / research
     mode: str
@@ -115,10 +115,12 @@ class State(TypedDict):
 # -----------------------------
 # 2) LLM
 # -----------------------------
-@lru_cache(maxsize=1)
-def get_llm() -> ChatGoogleGenerativeAI:
-    """Create the Gemini client only when a generation request needs it."""
-    return ChatGoogleGenerativeAI(model="gemini-3.1-flash-lite")
+def get_llm(api_key: Optional[str] = None) -> ChatGoogleGenerativeAI:
+    """Create a request-scoped Gemini client without persisting user keys."""
+    return ChatGoogleGenerativeAI(
+        model="gemini-3.1-flash-lite",
+        api_key=api_key or os.getenv("GOOGLE_API_KEY"),
+    )
 
 # -----------------------------
 # 3) Router
@@ -138,7 +140,7 @@ If needs_research=true:
 """
 
 def router_node(state: State) -> dict:
-    decider = get_llm().with_structured_output(RouterDecision)
+    decider = get_llm(state.get("google_api_key")).with_structured_output(RouterDecision)
     decision = decider.invoke(
         [
             SystemMessage(content=ROUTER_SYSTEM),
@@ -217,7 +219,7 @@ def research_node(state: State) -> dict:
     if not raw:
         return {"evidence": []}
 
-    extractor = get_llm().with_structured_output(EvidencePack)
+    extractor = get_llm(state.get("google_api_key")).with_structured_output(EvidencePack)
     pack = extractor.invoke(
         [
             SystemMessage(content=RESEARCH_SYSTEM),
@@ -266,7 +268,7 @@ Output must match Plan schema.
 """
 
 def orchestrator_node(state: State) -> dict:
-    planner = get_llm().with_structured_output(Plan)
+    planner = get_llm(state.get("google_api_key")).with_structured_output(Plan)
     mode = state.get("mode", "closed_book")
     evidence = state.get("evidence", [])
 
@@ -303,6 +305,7 @@ def fanout(state: State):
             {
                 "task": task.model_dump(),
                 "topic": state["topic"],
+                "google_api_key": state.get("google_api_key"),
                 "mode": state["mode"],
                 "as_of": state["as_of"],
                 "recency_days": state["recency_days"],
@@ -349,7 +352,7 @@ def worker_node(payload: dict) -> dict:
         for e in evidence[:20]
     )
 
-    section_md = get_llm().invoke(
+    section_md = get_llm(payload.get("google_api_key")).invoke(
         [
             SystemMessage(content=WORKER_SYSTEM),
             HumanMessage(
@@ -405,7 +408,7 @@ Return strictly GlobalImagePlan.
 """
 
 def decide_images(state: State) -> dict:
-    planner = get_llm().with_structured_output(GlobalImagePlan)
+    planner = get_llm(state.get("google_api_key")).with_structured_output(GlobalImagePlan)
     merged_md = state["merged_md"]
     plan = state["plan"]
     assert plan is not None

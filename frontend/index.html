@@ -38,6 +38,12 @@
         </form>
         <div class="suggestions"><span>TRY A TOPIC</span><button type="button" class="suggestion">Designing reliable background jobs</button><button type="button" class="suggestion">When to use a graph database</button><button type="button" class="suggestion">Building useful AI agents</button></div>
         <div id="status" class="status hidden" role="status" aria-live="polite"></div>
+        <section id="api-key-panel" class="api-key-panel hidden" aria-labelledby="api-key-heading">
+          <div><p class="eyebrow">PRIVATE TO THIS BROWSER SESSION</p><h3 id="api-key-heading">Connect your <em>Google AI key.</em></h3><p class="key-help">Your key stays in this tab's session storage across refreshes. It is sent over HTTPS for generation and is not saved by InkForge.</p></div>
+          <label for="api-key-input">GOOGLE AI API KEY</label>
+          <input id="api-key-input" type="password" autocomplete="off" spellcheck="false" placeholder="Paste your Google AI API key">
+          <div class="key-actions"><button id="save-api-key" type="button">Save for this session <span>↗</span></button><button id="forget-api-key" class="forget-key hidden" type="button">Forget saved key</button></div>
+        </section>
       </div>
       <section id="result" class="result hidden" aria-live="polite">
         <div class="result-head"><div><p class="eyebrow">YOUR FIRST DRAFT</p><h2 id="result-title"></h2><div id="result-meta" class="result-meta"></div></div><button id="download" class="download-button" type="button">Download .md <span>↓</span></button></div>

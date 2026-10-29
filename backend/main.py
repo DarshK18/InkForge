@@ -5,7 +5,7 @@ from pathlib import Path
 import logging
 import os
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, Header, HTTPException
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
@@ -30,13 +30,15 @@ def health():
 
 
 @app.post("/api/generate")
-def generate_blog(request: GenerateRequest):
-    if not os.getenv("GOOGLE_API_KEY"):
+def generate_blog(request: GenerateRequest, user_api_key: str | None = Header(default=None, alias="X-Google-API-Key")):
+    api_key = user_api_key or os.getenv("GOOGLE_API_KEY")
+    if not api_key:
         raise HTTPException(status_code=503, detail="Generation is not configured. Add GOOGLE_API_KEY in the deployment environment settings.")
 
     inputs = {
         "topic": request.topic.strip(),
         "save_artifacts": False,
+        "google_api_key": api_key,
         "mode": "",
         "needs_research": False,
         "queries": [],
